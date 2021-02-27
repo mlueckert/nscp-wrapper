@@ -35,7 +35,7 @@ function Get-NSCPModule() {
     )
     $Modules = @{
         CheckDisk   = 'check_drivesize'
-        CheckSystem = 'check_memory','check_cpu'
+        CheckSystem = 'check_memory','check_cpu','check_pagefile','check_uptime'
         CheckWMI    = 'check_wmi'
         CheckNSCP   = 'check_nscp', 'check_nscp_version'
     }
