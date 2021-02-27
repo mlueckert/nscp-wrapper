@@ -33,7 +33,3 @@ Describe "NSCP Wrapper Tests" {
 
     }
 }
-
-#.\nscpwrapper.ps1 -check check_drivesize
-
-#.\nscpwrapper.ps1 'check_memory' 'warning=used > 1%'
