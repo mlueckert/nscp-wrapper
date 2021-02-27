@@ -18,6 +18,7 @@ Describe "NSCP Wrapper Tests" {
             $result.output | Should -Match ' crash\(es\)'
             $result.perfdata | Should -BeNullOrEmpty
         }
+        #CPU check does only work when nsclient is running as a daemon.
         It "check_cpu" {
             $result = .\nscpwrapper.ps1 -check check_cpu -Verbose | ConvertFrom-Json
             $result.exitcode | Should -BeExactly 0
