@@ -1,0 +1,145 @@
+Allowed options:
+
+Common options:
+  --settings arg                Override (temporarily) settings subsystem to 
+                                use
+  --debug                       Set log level to debug (and show debug 
+                                information)
+  --log arg                     The log level to use
+  --define arg                  Defines to use to override settings. Syntax is 
+                                PATH:KEY=VALUE
+
+Common options:
+  --help                        Show the help message for a given command
+  --no-stderr                   Do not report errors on stderr
+  --version                     Show version information
+
+Service Options:
+  --install                     Install service
+  --uninstall                   Uninstall service
+  --start                       Start service
+  --stop                        Stop service
+  --restart                     Stop than start service
+  --info                        Show information about service
+  --run                         Run as a service
+  --name arg                    Name of service
+  --description arg             Description of service
+
+Settings options:
+  --migrate-to arg              Migrate (copy) settings from current store to 
+                                given target store
+  --migrate-from arg            Migrate (copy) settings from old given store to
+                                current store
+  --generate [=arg(=settings)]  Add comments to the current settings store (or 
+                                a given one).
+  --add-missing                 Add all default values for all missing keys.
+  --validate                    Validate the current configuration (or a given 
+                                configuration).
+  --load-all                    Load all plugins (currently only used with 
+                                generate).
+  --path arg                    Path of key to work with.
+  --key arg                     Key to work with.
+  --set arg                     Set a key and path to a given value (use --key 
+                                and --path).
+  --switch arg                  Set default context to use (similar to migrate 
+                                but does NOT copy values)
+  --show                        Show a value given a key and path.
+  --list                        List all keys given a path.
+  --add-defaults                Same as --add-missing
+  --remove-defaults             Remove all keys which have default values (and 
+                                empty sections)
+  --use-samples                 Add sample commands provided by some sections 
+                                such as targets and real time filters
+  --activate-module arg         Add a module (and its configuration options) to
+                                the configuration.
+
+Client Options:
+  --load-all                    Load all plugins.
+  -e [ --exec ] arg             Run a command (execute)
+  -b [ --boot ]                 Boot the client before executing command 
+                                (similar as running the command from test mode)
+  -q [ --query ] arg            Run a query with a given name
+  -s [ --submit ] arg           Submit passive check result
+  -M [ --module ] arg           Load specific module (in other words do not 
+                                auto detect module)
+  -a [ --argument ] arg         List of arguments (arguments gets -- prefixed 
+                                automatically (--argument foo=bar is the same 
+                                as setting "--foo bar")
+  --raw-argument arg            List of arguments (does not get -- prefixed)
+
+
+First argument has to be one of the following: client, help, service, settings, unit, 
+Or on of the following client aliases: check_mk, eventlog, ext, ext-scr, lua, mk, nrpe, nsca, nscp, op5, py, python, sys, syslog, test, web, wmi, 
+Usage: nscp <context>
+  The <context> is the mode of operation ie. a type of command. 
+You can also use aliases here which are shorthands for 'nscp client --module <plugin>'
+  Available context are: 
+    client
+      Act as a client. This will run commands inside various installed modules and scripts.
+
+    help
+      Display the help screen.
+
+    service
+      Install/uninstall/display NSCP service.
+
+    settings
+      Change and list settings as well as load and initialize modules.
+
+    unit
+      Run unit test scripts.
+
+  Available aliases are: 
+    check_mk   (same as nscp client --module CheckMKClient)
+      Use a check_mk (the protocol) client to request information from other systems via check_mk.
+
+    eventlog   (same as nscp client --module CheckEventLog)
+      Inject event log message into the eventlog (mainly for testing eventlog filtering and setup)
+
+    ext   (same as nscp client --module CheckExternalScripts)
+      TODO: describe: ext
+
+    ext-scr   (same as nscp client --module CheckExternalScripts)
+      TODO: describe: ext-scr
+
+    lua   (same as nscp client --module LUAScript)
+      Execute lua scripts
+
+    mk   (same as nscp client --module CheckMKClient)
+      Use a check_mk (the protocol) client to request information from other systems via check_mk.
+
+    nrpe   (same as nscp client --module NRPEClient)
+      Use a NRPE client to request information from other systems via NRPE similar to standard NRPE check_nrpe command.
+
+    nsca   (same as nscp client --module NSCAClient)
+      Use a NSCA to submit passive checks to a remote system. Similar to the send_nsca command
+
+    nscp   (same as nscp client --module NSCPClient)
+      Use a NSCP (the protocol) client to request information from other systems via NSCP.
+
+    op5   (same as nscp client --module Op5Client)
+      TODO: describe: op5
+
+    py   (same as nscp client --module PythonScript)
+      Execute python scripts
+
+    python   (same as nscp client --module PythonScript)
+      Execute python scripts
+
+    sys   (same as nscp client --module CheckSystem)
+      Various system tools to get information about the system (generally PDH on windows curretly)
+
+    syslog   (same as nscp client --module SyslogClient)
+      Use SYSLOG (the protocol) to submit messages to a remote system.
+
+    test   (same as nscp client --module CommandClient)
+      The best way to diagnose and find errors with your configuration and setup.
+
+    web   (same as nscp client --module WEBServer)
+      TODO: describe: web
+
+    wmi   (same as nscp client --module CheckWMI)
+      Run WMI queries from command line
+
+  A short list of all available contexts are: 
+client, help, service, settings, unit, check_mk, eventlog, ext, ext-scr, lua, mk, nrpe, nsca, nscp, op5, py, python, sys, syslog, test, web, wmi
