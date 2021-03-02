@@ -3,22 +3,27 @@
 #$ErrorActionPreference = 'Stop'
 [CmdletBinding()]
 param(
+    [Parameter(Mandatory = $true, Position=0)]
     [String]$Check,
+    [Switch]$ShowCMD,
+    [Parameter(Position=1, ValueFromRemainingArguments)]
     [String[]]$Arguments
 )
-function Get-StatusCode() {
-    param(
-        $Value,
-        $Key,
-        [Switch]$All
-    )
+
     $StatusCodes = @{
         OK       = 0
         WARNING  = 1
         CRITICAL = 2
         UNKNOWN  = 3
     }
-    if ($All -or $par) {
+
+function Get-StatusCode() {
+    param(
+        $Value,
+        $Key,
+        [Switch]$All
+    )
+    if ($All) {
         $StatusCodes
     }
     elseif ($Value) {
@@ -29,13 +34,22 @@ function Get-StatusCode() {
     }
 }
 
+function Get-NSCPPath() {
+    $NSCPExe = Get-ChildItem -Include nscp.exe -Path '.\nsclient\*', 'C:\Program Files\NSClient++\*' -ErrorAction SilentlyContinue
+    if ($NSCPExe) {
+        $NSCPExe.FullName
+    }
+    else {
+        throw ("No nscp.exe found.")
+    }
+}
 function Get-NSCPModule() {
     param(
         [String]$CheckNameRegex
     )
     $Modules = @{
         CheckDisk   = 'check_drivesize'
-        CheckSystem = 'check_memory','check_cpu','check_pagefile','check_uptime'
+        CheckSystem = 'check_memory', 'check_cpu', 'check_pagefile', 'check_uptime'
         CheckWMI    = 'check_wmi'
         CheckNSCP   = 'check_nscp', 'check_nscp_version'
     }
@@ -68,10 +82,11 @@ function Get-PluginText() {
 }
 
 try {
-    #$nscp_output = .\nsclient\nscp.exe client --module CheckSystem --query check_memory 'warning=used > 100%' --settings dummy
-    Write-Verbose ".\nsclient\nscp.exe client --module $(Get-NSCPModule $check) --query $Check $Arguments --settings dummy"
-    $nscp_output = .\nsclient\nscp.exe client --module $(Get-NSCPModule $check) --query $Check $Arguments --settings dummy
-    if ($nscp_output -match "Failed to validate filter") {
+
+
+    $cmdstring =  "$(Get-NSCPPath) client --module $(Get-NSCPModule $check) --query $Check $Arguments --settings dummy"
+    $nscp_output = . $(Get-NSCPPath) client --module $(Get-NSCPModule $check) --query $Check $Arguments --settings dummy
+    if ($nscp_output -match "Failed to validate filter|core No handler for command") {
         throw $nscp_output
     }
 
@@ -86,13 +101,22 @@ try {
         longoutput = $plugin_longoutput
         perfdata   = $plugin_perfdata
     }
-    $Output | ConvertTo-Json
+
+    if($ShowCmd){
+        $Output["cmd"] = $cmdstring
+    }
+
+    $Output | ConvertTo-Json -Compress | ForEach-Object { 
+        [System.Text.RegularExpressions.Regex]::Unescape($_) 
+    }
+    Exit $plugin_exitcode
 
 }
 catch {
     $ReturnMessage = @{
-        exitcode = 3
+        exitcode = $StatusCodes.UNKNOWN
         output   = "UNKNOWN - Wrapper error: {0}" -f $_.Exception.Message
     }
     $ReturnMessage | ConvertTo-Json
+    Exit $ReturnMessage.exitcode
 }
