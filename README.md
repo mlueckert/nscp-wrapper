@@ -46,6 +46,30 @@ The goal of this wrapper is that most of the checks and all its special paramete
 }
 ```
 
+## JSON Output
+
+The wrapper script will output JSON
+
+Example of a check_memory json
+
+```json
+{
+   "output":"WARNING: committed = 4.06GB, physical = 3.589GB",
+   "exitcode":1,
+   "longoutput":"WARNING: committed = 4.06GB, physical = 3.589GB|'committed'=4.05964GB;6.3996;7.19955;0;7.9995 'committed %'=51%;80;90;0;100 'physical'=3.58921GB;3.1996;3.59955;0;3.9995 'physical %'=90%;80;90;0;100",
+   "cmd":"C:\\Program Files\\NSClient++\\nscp.exe client --module CheckSystem --query check_memory  --settings dummy",
+   "perfdata":"'committed'=4.05964GB;6.3996;7.19955;0;7.9995 'committed %'=51%;80;90;0;100 'physical'=3.58921GB;3.1996;3.59955;0;3.9995 'physical %'=90%;80;90;0;100"
+}
+```
+
+### JSON Fields
+
+- output = The plugin output
+- exitcode = The plugin exit code
+- longoutput = The plugin longoutput
+- cmd = If -ShowCMD has been specified the full command that has been run.
+- perfdata = The plugin performance data
+
 ## Examples
 
 ### Run check_memory
